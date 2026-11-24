@@ -1,0 +1,25 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+:root {
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  color: #dae2fd;
+  background: #0b1326;
+  line-height: 1.55;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; min-width: 320px; min-height: 100vh; }
+a { color: #89ceff; }
+:focus-visible { outline: 2px solid #4cd7f6; outline-offset: 3px; }
+button, input, select, textarea { font: inherit; }
+button, a { -webkit-tap-highlight-color: transparent; }
+button { cursor: pointer; }
+::selection { color: #061325; background: #89ceff; }
+body[data-theme="light"] { color: #17263f; background: #f1f5fa; color-scheme: light; }
+body[data-theme="light"] a { color: #087eb6; }
+body[data-theme="light"] :focus-visible { outline-color: #1584b8; }
+body[data-theme="light"] ::selection { color: #fff; background: #168bc2; }

@@ -1,0 +1,25 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "https://air-byte.onrender.com/api/:path*"
+    },
+    {
+      "source": "/admin/:path*",
+      "destination": "https://air-byte.onrender.com/admin/:path*"
+    },
+    {
+      "source": "/static/:path*",
+      "destination": "https://air-byte.onrender.com/static/:path*"
+    },
+    {
+      "source": "/media/:path*",
+      "destination": "https://air-byte.onrender.com/media/:path*"
+    },
+    {
+      "source": "/:path*",
+      "destination": "/index.html"
+    }
+  ]
+}

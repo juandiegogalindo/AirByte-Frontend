@@ -1,0 +1,53 @@
+.moderation-main { width: min(1060px, 92vw); margin: 2.5rem auto 4rem; }
+.moderation-heading { margin-bottom: 1.4rem; }
+.moderation-heading h1 { margin: .5rem 0; font-size: clamp(1.9rem, 5vw, 2.65rem); letter-spacing: -.035em; }
+.moderation-heading p { color: #aebbd0; }
+.moderation-panel { padding: clamp(1rem, 3vw, 1.5rem); }
+.moderation-toolbar { display: flex; align-items: end; justify-content: space-between; gap: 1rem; margin-bottom: 1rem; }
+.moderation-toolbar h2 { margin: .3rem 0 0; font-size: 1.2rem; }
+.moderation-toolbar label { min-width: min(100%, 20rem); color: #aebbd0; font-size: .75rem; }
+.moderation-toolbar input { width: 100%; margin: 0; }
+.moderation-list { display: grid; gap: .65rem; }
+.moderation-user { margin: 0; padding: .9rem 1rem; border: 1px solid #29364c; border-radius: .55rem; background: #10192b; }
+.moderation-user-top { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+.moderation-user h3 { margin: 0; font-size: .95rem; }
+.moderation-user-top p { margin: .25rem 0 0; color: #91a5bf; font-size: .73rem; overflow-wrap: anywhere; }
+.moderation-state { display: inline-flex; align-items: center; max-width: 50%; padding: .28rem .55rem; border-radius: 99px; background: #173d34; color: #65ddb0; font-size: .66rem; font-weight: 750; text-align: center; }
+.moderation-state.is-suspension { background: #493a22; color: #f4cb73; }
+.moderation-state.is-baneo, .moderation-state.is-inactiva { background: #493034; color: #ffaaa8; }
+.moderation-reason { margin: .65rem 0 0; color: #bdc9d9; font-size: .76rem; }
+.moderation-actions { display: flex; gap: .5rem; margin-top: .7rem; }
+.moderation-actions button { padding: .4rem .65rem; font-size: .72rem; }
+.moderation-lift { border-color: #27634e; color: #77dfb2; }
+.moderation-form { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: .7rem; margin-top: .85rem; padding-top: .85rem; border-top: 1px solid #29364c; }
+.moderation-form label { margin: 0; color: #aebbd0; font-size: .73rem; }
+.moderation-form select, .moderation-form textarea { width: 100%; margin: 0; }
+.moderation-form textarea { min-height: 4rem; }
+.moderation-reason-field { grid-column: 1 / -1; }
+.moderation-form-actions { grid-column: 1 / -1; display: flex; justify-content: flex-end; gap: .5rem; }
+.moderation-confirm { border-color: #9d4747; background: #713438; color: #fff; }
+.moderation-confirm:hover:not(:disabled) { border-color: #c95d5d; background: #87383d; color: #fff; }
+.moderation-notice, .moderation-error-text { margin: .7rem 0; padding: .65rem .8rem; border-radius: .45rem; font-size: .8rem; }
+.moderation-notice { border: 1px solid #245d4c; background: #133329; color: #78dfb3; }
+.moderation-error-text, .moderation-error { border-color: #6c373c; color: #ffb4ab !important; }
+.moderation-message { padding: 1.25rem; color: #aebbd0; }
+.moderation-empty, .moderation-footnote { color: #91a5bf; font-size: .75rem; }
+.moderation-empty { padding: 1.3rem; text-align: center; }
+.moderation-footnote { margin: .9rem 0 0; }
+body[data-theme="light"] .moderation-heading p, body[data-theme="light"] .moderation-toolbar label { color: #5d7088; }
+body[data-theme="light"] .moderation-user { border-color: #dce4ed; background: #f8fafc; }
+body[data-theme="light"] .moderation-user-top p, body[data-theme="light"] .moderation-footnote { color: #71839a; }
+body[data-theme="light"] .moderation-reason { color: #53677f; }
+body[data-theme="light"] .moderation-form { border-color: #dce4ed; }
+body[data-theme="light"] .moderation-form label { color: #53677f; }
+body[data-theme="light"] .moderation-notice { border-color: #b4dfca; background: #effaf4; color: #176c48; }
+body[data-theme="light"] .moderation-error-text, body[data-theme="light"] .moderation-error { border-color: #ebc7c7; color: #a22e2e !important; }
+body[data-theme="light"] .moderation-empty, body[data-theme="light"] .moderation-message { color: #5d7088 !important; }
+@media (max-width: 620px) {
+  .moderation-main { width: 94vw; margin-top: 1.6rem; }
+  .moderation-toolbar, .moderation-user-top { align-items: flex-start; flex-direction: column; }
+  .moderation-toolbar label { width: 100%; }
+  .moderation-state { max-width: 100%; }
+  .moderation-form { grid-template-columns: 1fr; }
+  .moderation-reason-field, .moderation-form-actions { grid-column: auto; }
+}
