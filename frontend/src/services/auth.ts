@@ -1,5 +1,5 @@
 // Destino tras iniciar sesión y aviso de cambios de sesión.
-import type { Session } from './types'
+import type { Session } from '../types/types'
 
 const AUTH_DESTINATION_KEY = 'airbyte-auth-destination'
 const AUTH_DESTINATION_TTL = 30 * 60 * 1000

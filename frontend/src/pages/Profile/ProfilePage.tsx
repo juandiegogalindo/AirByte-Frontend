@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
 import type { FormEvent } from 'react'
-import { api, write } from './api'
-import { guardarDestinoAutenticacion, notificarSesionActualizada } from './auth'
-import type { Session } from './types'
-import { SiteFooter, SiteHeader } from './SiteChrome'
+import { api, write } from '../../services/api'
+import { guardarDestinoAutenticacion, notificarSesionActualizada } from '../../services/auth'
+import type { Session } from '../../types/types'
+import { SiteFooter, SiteHeader } from '../../components/SiteChrome'
 import './Profile.css'
 
 type Profile = { nombre: string; usuario: string; foto: string | null; tiene_contrasena: boolean }

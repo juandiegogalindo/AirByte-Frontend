@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react'
 import type { FormEvent } from 'react'
-import { api } from './api'
-import { consumirDestinoAutenticacion, leerDestinoAutenticacion, limpiarParametroNext } from './auth'
-import type { Session } from './types'
-import { AirbyteLogoImages, SiteFooter, SiteHeader } from './SiteChrome'
+import { api } from '../../services/api'
+import { consumirDestinoAutenticacion, leerDestinoAutenticacion, limpiarParametroNext } from '../../services/auth'
+import type { Session } from '../../types/types'
+import { AirbyteLogoImages, SiteFooter, SiteHeader } from '../../components/SiteChrome'
 import './Auth.css'
-import './Profile.css'
+import "../Profile/Profile.css";
 
 type PendingGoogle = { nombre: string; correo: string }
 

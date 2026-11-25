@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react'
-import { api } from './api'
-import { ErrorNotice, Skeleton } from './Estados'
-import { hora, numero } from './format'
-import HourlyChart, { type ForecastPoint } from './HourlyChart'
-import LevelScale from './LevelScale'
-import Recommendations from './Recommendations'
-import Sparkline from './Sparkline'
+import { api } from '../../services/api'
+import { ErrorNotice, Skeleton } from '../Estados/Estados'
+import { hora, numero } from '../../utils/format'
+import HourlyChart, { type ForecastPoint } from '../../components/charts/HourlyChart'
+import LevelScale from '../../components/LevelScale'
+import Recommendations from '../../components/Recommendations'
+import Sparkline from '../../components/charts/Sparkline'
 
 export type CurrentData = {
   estacion: string

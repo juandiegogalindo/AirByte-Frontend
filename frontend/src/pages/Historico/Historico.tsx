@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
-import { api } from './api'
-import './Current.css'
-import { ErrorNotice, Skeleton } from './Estados'
-import { hora, numero } from './format'
+import { api } from '../../services/api'
+import "../Current/Current.css";
+import { ErrorNotice, Skeleton } from '../Estados/Estados'
+import { hora, numero } from '../../utils/format'
 import './Historico.css'
-import { nivelPm25 } from './nivel'
-import type { Result, Station } from './types'
+import { nivelPm25 } from '../../utils/nivel'
+import type { Result, Station } from '../../types/types'
 
 const etiquetaMes = (mes: string) => new Intl.DateTimeFormat('es-CO', { month: 'long', year: 'numeric', timeZone: 'UTC' })
   .format(new Date(`${mes}-01T12:00:00Z`))

@@ -1,7 +1,7 @@
-import './Current.css'
-import { Skeleton } from './Estados'
-import { numero } from './format'
-import { ESCALA_MAXIMA, LIMITE_ALTO, LIMITE_BAJO, nivelPm25, posicionEnEscala } from './nivel'
+import "../pages/Current/Current.css";
+import { Skeleton } from '../pages/Estados/Estados'
+import { numero } from '../utils/format'
+import { ESCALA_MAXIMA, LIMITE_ALTO, LIMITE_BAJO, nivelPm25, posicionEnEscala } from '../utils/nivel'
 
 const ETIQUETA = {
   baja: 'NIVEL BAJO',

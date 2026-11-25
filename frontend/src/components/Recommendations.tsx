@@ -1,7 +1,7 @@
-import { hora, numero } from './format'
-import type { CurrentData } from './Current'
-import { Skeleton } from './Estados'
-import { nivelPm25 } from './nivel'
+import { hora, numero } from '../utils/format'
+import type { CurrentData } from '../pages/Current/Current'
+import { Skeleton } from '../pages/Estados/Estados'
+import { nivelPm25 } from '../utils/nivel'
 
 type Advice = { icon: string; iconClass: string; title: string; text: string }
 

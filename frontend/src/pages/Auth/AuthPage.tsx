@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
 import type { FormEvent } from 'react'
-import { api, write } from './api'
-import { consumirDestinoAutenticacion, leerDestinoAutenticacion, limpiarParametroNext } from './auth'
-import type { Session } from './types'
-import { AirbyteLogoImages, SiteFooter, SiteHeader } from './SiteChrome'
+import { api, write } from '../../services/api'
+import { consumirDestinoAutenticacion, leerDestinoAutenticacion, limpiarParametroNext } from '../../services/auth'
+import type { Session } from '../../types/types'
+import { AirbyteLogoImages, SiteFooter, SiteHeader } from '../../components/SiteChrome'
 import './Auth.css'
 
 export default function AuthPage({ mode }: { mode: 'login' | 'registro' }) {

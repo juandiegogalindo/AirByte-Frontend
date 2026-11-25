@@ -2,9 +2,9 @@ import { useEffect, useRef, useState } from 'react'
 import L from 'leaflet'
 import type { FeatureCollection, MultiPolygon, Polygon } from 'geojson'
 import 'leaflet/dist/leaflet.css'
-import { api } from './api'
-import { hora, numero } from './format'
-import shapes from './localidades.json'
+import { api } from '../services/api'
+import { hora, numero } from '../utils/format'
+import shapes from '../data/localidades.json'
 
 type Station = { slug: string; nombre: string; localidad: string }
 type Reading = { hora: string; pm25: number; antiguedad_minutos: number }

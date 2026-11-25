@@ -1,4 +1,4 @@
-import { SiteFooter, SiteHeader } from './SiteChrome'
+import { SiteFooter, SiteHeader } from '../../components/SiteChrome'
 import './ErrorPage.css'
 
 const DETAILS: Record<number, { title: string; description: string }> = {

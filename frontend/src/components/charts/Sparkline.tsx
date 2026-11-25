@@ -1,7 +1,7 @@
-import './Current.css'
-import { hora, numero } from './format'
+import "../../pages/Current/Current.css";
+import { hora, numero } from '../../utils/format'
 import type { ForecastPoint } from './HourlyChart'
-import { LIMITE_ALTO, LIMITE_BAJO } from './nivel'
+import { LIMITE_ALTO, LIMITE_BAJO } from '../../utils/nivel'
 
 const W = 480
 const H = 60

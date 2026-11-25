@@ -1,5 +1,5 @@
-import { SiteFooter, SiteHeader } from './SiteChrome'
-import './Auth.css'
+import { SiteFooter, SiteHeader } from '../../components/SiteChrome'
+import "../Auth/Auth.css";
 
 const sections = [
   ['01', 'Sobre Air-Byte', 'Air-Byte permite consultar mediciones horarias de calidad del aire, ver estimaciones de PM2,5 y compartir observaciones ciudadanas por localidad. La disponibilidad y actualización de las mediciones dependen de la Red de Monitoreo de Calidad del Aire de Bogotá (RMCAB).'],
