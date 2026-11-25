@@ -1,15 +1,14 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { api } from './api'
-import { hora, numero } from './format'
-import type { Result, Station } from './types'
+import { ErrorNotice } from './Estados'
+import type { Station } from './types'
 import Current, { type CurrentData } from './Current'
+import Historico from './Historico'
 import LocalityMap, { MapLegend } from './LocalityMap'
 import StationDetail from './StationDetail'
 import { SiteFooter, SiteHeader } from './SiteChrome'
 import './App.css'
 
-const etiquetaMes = (mes: string) => new Intl.DateTimeFormat('es-CO', { month: 'long', year: 'numeric', timeZone: 'UTC' })
-  .format(new Date(`${mes}-01T12:00:00Z`))
 const localityLabels: Record<string, string> = {
   kennedy: 'Kennedy', 'puente-aranda': 'Puente Aranda', tunjuelito: 'Tunjuelito', usaquen: 'Usaquén',
 }
@@ -25,19 +24,8 @@ export default function App() {
   const [station, setStation] = useState(preferredStation)
   const [pinnedStation, setPinnedStation] = useState(preferredStation)
   const [refreshKey, setRefreshKey] = useState(0)
-  const [month, setMonth] = useState('2025-01')
-  const [months, setMonths] = useState<string[]>([])
-  const [monthsReady, setMonthsReady] = useState(false)
-  const [available, setAvailable] = useState<string[]>([])
-  const [time, setTime] = useState('2025-01-01T01:00:00-05:00')
-  const [evaluate, setEvaluate] = useState(true)
-  const [result, setResult] = useState<Result>()
   const [currentData, setCurrentData] = useState<CurrentData>()
   const [error, setError] = useState('')
-  const [availabilityError, setAvailabilityError] = useState('')
-  const [availabilityLoading, setAvailabilityLoading] = useState(false)
-  const [busy, setBusy] = useState(false)
-  const requestId = useRef(0)
 
   useEffect(() => {
     let active = true
@@ -51,68 +39,12 @@ export default function App() {
     return () => { active = false }
   }, [])
 
-  useEffect(() => {
-    if (!historical) return
-    let active = true
-    setMonthsReady(false)
-    setAvailabilityLoading(false)
-    setMonths([])
-    setAvailable([])
-    setTime('')
-    setAvailabilityError('')
-    setResult(undefined)
-    api<{ meses: string[] }>('/estaciones/' + station + '/disponibilidad')
-      .then(data => {
-        if (!active) return
-        setMonths(data.meses)
-        setMonth(current => data.meses.includes(current) ? current : (data.meses[data.meses.length - 1] ?? ''))
-        if (!data.meses.length) setAvailabilityError('El servidor no tiene fechas históricas cargadas para esta estación.')
-      }).catch(e => { if (active) setAvailabilityError((e as Error).message) })
-      .finally(() => { if (active) setMonthsReady(true) })
-    return () => { active = false }
-  }, [station, historical])
-
-  useEffect(() => {
-    if (!historical || !monthsReady || !month || !months.includes(month)) return
-    let active = true
-    setAvailabilityLoading(true)
-    setAvailable([])
-    setTime('')
-    setAvailabilityError('')
-    setResult(undefined)
-    api<{ horas: string[] }>('/estaciones/' + station + '/disponibilidad?mes=' + month)
-      .then(data => {
-        if (!active) return
-        setAvailable(data.horas)
-        setTime(data.horas[0] ?? '')
-        if (!data.horas.length) setAvailabilityError(`No hay lecturas de PM2,5 en ${etiquetaMes(month)} para esta estación.`)
-      }).catch(e => { if (active) setAvailabilityError((e as Error).message) })
-      .finally(() => { if (active) setAvailabilityLoading(false) })
-    return () => { active = false }
-  }, [station, month, historical, monthsReady, months])
-
-  async function consult() {
-    const id = ++requestId.current
-    const params = new URLSearchParams({ estacion: station, emision: time, evaluar: String(evaluate) })
-    setBusy(true)
-    setError('')
-    setResult(undefined)
-    try {
-      const data = await api<Result>('/consulta?' + params)
-      if (id === requestId.current) setResult(data)
-    } catch (e) { if (id === requestId.current) setError((e as Error).message) }
-    finally { if (id === requestId.current) setBusy(false) }
-  }
-
   const selected = stations.find(item => item.slug === station)
   const stationData = currentData?.estacion === station ? currentData : undefined
   const live = Boolean(stationData?.medicion && stationData.medicion.antiguedad_minutos < 180)
 
   function changeStation(slug: string) {
     setCurrentData(undefined)
-    setAvailable([])
-    setMonths([])
-    setTime('')
     setStation(slug)
   }
 
@@ -126,6 +58,7 @@ export default function App() {
     <main className="dashboard-main">
       <section id="consulta" aria-labelledby="dashboard-title">
         <h1 className="visually-hidden" id="dashboard-title">Calidad del aire en Bogotá</h1>
+        {error && <ErrorNotice message={error} />}
         <div className="station-strip">
           <label className="station-picker"><span className="station-picker-label">Estación de monitoreo</span>
             <select value={station} onChange={event => changeStation(event.target.value)}>
@@ -156,38 +89,7 @@ export default function App() {
         </div>
 
         {!historical ? <Current key={`${station}-${refreshKey}`} station={station} label={selected?.nombre ?? 'Tunal'} onData={setCurrentData} />
-          : <section className="historical-panel panel" aria-label="Consulta histórica" aria-busy={!monthsReady || availabilityLoading}>
-            <form className="filters" onSubmit={event => { event.preventDefault(); void consult() }}>
-              <label>Estación<select value={station} onChange={event => changeStation(event.target.value)}>
-                {stations.map(item => <option key={item.slug} value={item.slug}>{item.nombre}</option>)}
-              </select></label>
-              <label>Mes de consulta<select required value={month} disabled={!monthsReady || !months.length}
-                onChange={event => { setAvailable([]); setTime(''); setAvailabilityError(''); setMonth(event.target.value) }}>
-                {!months.length && <option value="">{monthsReady ? 'Sin histórico disponible' : 'Buscando meses…'}</option>}
-                {months.map(value => <option key={value} value={value}>{etiquetaMes(value)}</option>)}
-              </select></label>
-              <label>Hora en Bogotá<select value={time} disabled={!available.length || availabilityLoading} onChange={event => setTime(event.target.value)}>
-                {available.length === 0 && <option value="">{availabilityLoading ? 'Buscando horas…' : 'Sin horas disponibles'}</option>}
-                {available.map(value => <option key={value} value={value}>{hora(value)}</option>)}
-              </select></label>
-              <button disabled={!available.length || !time || busy || availabilityLoading}>{busy ? 'Consultando…' : 'Consultar'}</button>
-              <label className="check"><input type="checkbox" checked={evaluate} onChange={event => setEvaluate(event.target.checked)} /> Mostrar medición posterior</label>
-            </form>
-            {!monthsReady && <p role="status">Buscando meses con datos históricos…</p>}
-            {availabilityError && <p role="status">{availabilityError}</p>}
-            {error && <p role="alert">{error}</p>}
-            {result && <div aria-live="polite">
-              <p>Emisión histórica · {hora(result.emision)}</p>
-              <div className="metrics">
-                <div><h3>{result.medicion?.antiguedad_minutos ? 'Última medición disponible' : 'Medición oficial'}</h3>
-                  {result.medicion ? <><strong>{numero.format(result.medicion.pm25)} <small>µg/m³</small></strong><p>{hora(result.medicion.hora)}</p>
-                    {result.medicion.antiguedad_minutos > 0 && <p>{result.medicion.antiguedad_minutos} minutos antes de la emisión</p>}</> : <p>Sin lectura previa</p>}</div>
-                <div><h3>Pronóstico horario</h3>{result.pronostico ? <><strong>{numero.format(result.pronostico.pm25)} <small>µg/m³</small></strong><p>{hora(result.pronostico.hora)}</p></> : <p>Sin pronóstico para esta hora</p>}</div>
-                {result.evaluacion && <div><h3>Observado al día siguiente</h3><strong>{result.evaluacion.pm25_observado === null ? 'Sin lectura' : numero.format(result.evaluacion.pm25_observado) + ' µg/m³'}</strong><p>{hora(result.evaluacion.hora_observada)}</p></div>}
-              </div>
-              <p>El modelo tiende a subestimar picos de concentración.</p>
-            </div>}
-          </section>}
+          : <Historico station={station} stations={stations} onStation={changeStation} />}
 
         <section className="pm25-explainer panel" aria-labelledby="pm25-title">
           <h2 id="pm25-title">¿Qué es PM2,5 y por qué importa?</h2>

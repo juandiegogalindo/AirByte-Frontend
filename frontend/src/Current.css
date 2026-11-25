@@ -45,3 +45,25 @@ body[data-theme="light"] .sparkline { color: #0785ad; }
 body[data-theme="light"] .sparkline figcaption, body[data-theme="light"] .spark-axis { color: #5a6c84; }
 body[data-theme="light"] .spark-limit { stroke: #aebccd; }
 body[data-theme="light"] .spark-now { fill: #fff; }
+
+/* Celular: la lectura debe verse sin tanto desplazamiento. */
+@media (max-width: 580px) {
+  body .site-header { position: static; }
+  .dashboard-main .station-facts { display: none; }
+  .dashboard-main .view-toolbar-label { display: none; }
+  .dashboard-main .view-toolbar { margin-top: .6rem; }
+  .dashboard-main .reading-heading > span:first-child { display: none; }
+  .dashboard-main .now { padding: 1.1rem; }
+  .dashboard-main .station-picker select, .dashboard-main .mode-switch button { min-height: 2.75rem; }
+  /* Recomendaciones: la etiqueta pasa a otra línea para que el título no se parta. */
+  .dashboard-main .recommendations-heading { flex-wrap: wrap; }
+  .dashboard-main .recommendations-heading > div { flex: 1 1 10rem; min-width: 0; }
+  .dashboard-main .recommendations-tag { margin-left: 0; }
+  /* Métricas en dos columnas y con menos espacio vertical. */
+  .dashboard-main .live-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .6rem; padding-top: .4rem; }
+  /* Gráfico detallado: el SVG se reduce, así que el texto se agranda en sus unidades. */
+  .dashboard-main .pm-chart text { font-size: 19px; }
+  /* Ficha de sector: etiqueta arriba y valor abajo, sin cortes raros. */
+  .dashboard-main .detail-facts > div { flex-direction: column; gap: .2rem; }
+  .dashboard-main .detail-facts strong { text-align: left; }
+}

@@ -1,0 +1,29 @@
+/* Vista Histórico: comparación entre medición, pronóstico y lo observado. */
+.hist-heading h2 { margin: .2rem 0 .35rem; }
+.hist-heading p { max-width: 46rem; margin: 0 0 1.1rem; color: #a7b8ce; font-size: .88rem; }
+.hist-note { margin: 1rem 0 0; color: #8fa2ba; font-size: .82rem; }
+.empty-state { margin: 1rem 0 0; padding: .9rem 1rem; border: 1px dashed #34465f; border-radius: .55rem; background: #10192b; color: #b4c3d8; font-size: .88rem; }
+.hist-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); gap: .9rem; margin-top: 1rem; }
+.hist-card { display: grid; align-content: start; gap: .55rem; min-width: 0; padding: 1rem; border: 1px solid #1d2940; border-radius: .6rem; background: #10192b; }
+.hist-card h3 { margin: 0; color: #8196b1; font: 600 .58rem 'JetBrains Mono', monospace; letter-spacing: .06em; text-transform: uppercase; }
+.hist-value { color: #d3e1f5; font: 600 1.9rem/1.1 'JetBrains Mono', monospace; }
+.hist-value small { margin-left: .4rem; color: #57d6ee; font-size: .75rem; }
+.hist-card .level-badge { justify-self: start; }
+.hist-bar { height: .45rem; overflow: hidden; border-radius: 999px; background: #1d2940; }
+.hist-bar i { display: block; height: 100%; border-radius: inherit; }
+.hist-bar .is-baja { background: #34d399; }
+.hist-bar .is-intermedia { background: #facc15; }
+.hist-bar .is-alta { background: #f87171; }
+.hist-bar .is-sin-dato { background: #64748b; }
+.hist-card p { margin: 0; color: #a7b8ce; font-size: .8rem; }
+.hist-summary { margin: 1rem 0 0; padding: .8rem 1rem; border-left: 3px solid #57d6ee; border-radius: .3rem; background: #10192b; color: #d3e1f5; }
+
+body[data-theme="light"] .hist-heading p, body[data-theme="light"] .hist-card p { color: #52647c; }
+body[data-theme="light"] .hist-note { color: #5a6c84; }
+body[data-theme="light"] .empty-state, body[data-theme="light"] .hist-summary { background: #f5f8fc; border-color: #c5d2e1; color: #2b3e58; }
+body[data-theme="light"] .hist-summary { border-left-color: #0785ad; }
+body[data-theme="light"] .hist-card { border-color: #dce4ef; background: #f5f8fc; }
+body[data-theme="light"] .hist-card h3 { color: #5a6c84; }
+body[data-theme="light"] .hist-value { color: #1b2f4d; }
+body[data-theme="light"] .hist-value small { color: #0785ad; }
+body[data-theme="light"] .hist-bar { background: #dde6f0; }
