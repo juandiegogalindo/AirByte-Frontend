@@ -31,3 +31,17 @@ body[data-theme="light"] .level-badge.is-alta { background: #fde2e2; color: #a12
 body[data-theme="light"] .level-badge.is-sin-dato { background: #e6ecf3; color: #5a6c84; }
 body[data-theme="light"] .level-marker { border-color: #fff; background: #1b2f4d; box-shadow: 0 1px 4px #22365340; }
 body[data-theme="light"] .level-labels { color: #5a6c84; }
+
+/* Resumen del pronóstico (Sparkline). */
+.sparkline { display: grid; gap: .3rem; margin: .1rem 0 .9rem; color: #57d6ee; }
+.sparkline figcaption, .spark-axis { display: flex; justify-content: space-between; gap: .5rem; color: #8196b1; font: 600 .55rem 'JetBrains Mono', monospace; letter-spacing: .06em; }
+.sparkline svg { display: block; width: 100%; height: auto; overflow: visible; }
+.spark-area { fill: currentColor; opacity: .12; }
+.spark-line { fill: none; stroke: currentColor; stroke-width: 2; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+.spark-limit { stroke: #4a5d78; stroke-width: 1; stroke-dasharray: 3 4; vector-effect: non-scaling-stroke; }
+.spark-now { fill: #0b1424; stroke: currentColor; stroke-width: 2; }
+.spark-peak { fill: currentColor; }
+body[data-theme="light"] .sparkline { color: #0785ad; }
+body[data-theme="light"] .sparkline figcaption, body[data-theme="light"] .spark-axis { color: #5a6c84; }
+body[data-theme="light"] .spark-limit { stroke: #aebccd; }
+body[data-theme="light"] .spark-now { fill: #fff; }

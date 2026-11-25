@@ -5,6 +5,7 @@ import { hora, numero } from './format'
 import HourlyChart, { type ForecastPoint } from './HourlyChart'
 import LevelScale from './LevelScale'
 import Recommendations from './Recommendations'
+import Sparkline from './Sparkline'
 
 export type CurrentData = {
   estacion: string
@@ -63,6 +64,8 @@ export default function Current({ station, label, onData }: { station: string; l
           <strong className="now-value">{cargando ? <Skeleton width="2.6em" height=".8em" /> : data?.medicion ? numero.format(data.medicion.pm25) : '—'}<small>µg/m³</small></strong>
         </div>
         <LevelScale loading={cargando} value={isLive ? data?.medicion?.pm25 : undefined} caption="Material particulado fino PM2,5" />
+        {cargando ? <Skeleton width="100%" height="3.6rem" />
+          : data?.horas.length && data.medicion ? <Sparkline reading={data.medicion} forecast={data.horas} /> : null}
         {error && <ErrorNotice message={error} onRetry={reintentar} />}
         {cargando && <p role="status" className="reading-source">Consultando la red de monitoreo…{lento && ' El servidor puede tardar en despertar; sigue intentando.'}</p>}
         {data?.medicion && <p className="reading-source">{label} · {hora(data.medicion.hora)} · Bogotá</p>}
