@@ -1,10 +1,11 @@
 import { hora, numero } from './format'
 import type { CurrentData } from './Current'
+import { Skeleton } from './Estados'
 import { nivelPm25 } from './nivel'
 
 type Advice = { icon: string; iconClass: string; title: string; text: string }
 
-export default function Recommendations({ data }: { data?: CurrentData }) {
+export default function Recommendations({ data, loading = false }: { data?: CurrentData; loading?: boolean }) {
   const reading = data?.medicion && data.medicion.antiguedad_minutos < 180
     ? data.medicion
     : undefined
@@ -70,11 +71,14 @@ export default function Recommendations({ data }: { data?: CurrentData }) {
   return <section className="panel recommendations" aria-labelledby="recommendations-title">
     <div className="recommendations-heading"><span className="recommendations-symbol" aria-hidden="true">✳</span>
       <div><h2 id="recommendations-title">Recomendaciones para ti</h2>
-        <p>{reading ? `Según la lectura reciente · ${numero.format(reading.pm25)} µg/m³` : 'Consejos según la estación seleccionada'}</p></div>
-      <span className={`recommendations-tag is-${band}`}>{label}</span>
+        <p>{loading ? 'Consultando la lectura reciente…' : reading ? `Según la lectura reciente · ${numero.format(reading.pm25)} µg/m³` : 'Consejos según la estación seleccionada'}</p></div>
+      {!loading && <span className={`recommendations-tag is-${band}`}>{label}</span>}
     </div>
     <div className="recommendation-list" aria-live="polite">
-      {advice.map(item => <article className="recommendation" key={item.title}>
+      {loading ? [0, 1, 2].map(i => <article className="recommendation" key={i} aria-hidden="true">
+        <Skeleton width="2.25rem" height="2.25rem" />
+        <div><Skeleton width="60%" height="1rem" /><Skeleton width="100%" height=".8rem" /></div>
+      </article>) : advice.map(item => <article className="recommendation" key={item.title}>
         <span className={`recommendation-icon ${item.iconClass}`} aria-hidden="true">{item.icon}</span>
         <div><h3>{item.title}</h3><p>{item.text}</p></div>
       </article>)}

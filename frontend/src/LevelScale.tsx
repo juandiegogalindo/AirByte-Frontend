@@ -1,4 +1,5 @@
 import './Current.css'
+import { Skeleton } from './Estados'
 import { numero } from './format'
 import { ESCALA_MAXIMA, LIMITE_ALTO, LIMITE_BAJO, nivelPm25, posicionEnEscala } from './nivel'
 
@@ -9,7 +10,12 @@ const ETIQUETA = {
   'sin-dato': 'SIN LECTURA RECIENTE',
 }
 
-export default function LevelScale({ value, caption }: { value?: number; caption: string }) {
+export default function LevelScale({ value, caption, loading = false }: { value?: number; caption: string; loading?: boolean }) {
+  if (loading) return <div className="level-scale" aria-hidden="true">
+    <div className="level-head"><Skeleton width="8rem" height="1.5rem" /><Skeleton width="11rem" height="1rem" /></div>
+    <Skeleton width="100%" height=".6rem" />
+    <Skeleton width="100%" height=".8rem" />
+  </div>
   const nivel = nivelPm25(value)
   const medidor = value === undefined ? { 'aria-hidden': true } : {
     role: 'meter',
