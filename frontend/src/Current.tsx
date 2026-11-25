@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { api } from './api'
 import { hora, numero } from './format'
 import HourlyChart, { type ForecastPoint } from './HourlyChart'
+import LevelScale from './LevelScale'
 import Recommendations from './Recommendations'
 
 export type CurrentData = {
@@ -42,10 +43,9 @@ export default function Current({ station, label, onData }: { station: string; l
           <span className={`status-pill ${isLive ? 'is-live' : 'is-stale'}`}><i />{isLive ? 'EN VIVO' : data?.estado === 'lectura_atrasada' ? 'LECTURA ATRASADA' : 'SIN LECTURA'}</span>
         </div>
         <div className="reading-value-row">
-          {data?.medicion ? <strong className="now-value">{numero.format(data.medicion.pm25)} <small>µg/m³</small></strong>
-            : <strong className="now-value">— <small>µg/m³</small></strong>}
-          <span className="reading-caption">Material particulado fino PM2,5</span>
+          <strong className="now-value">{data?.medicion ? numero.format(data.medicion.pm25) : '—'}<small>µg/m³</small></strong>
         </div>
+        <LevelScale value={isLive ? data?.medicion?.pm25 : undefined} caption="Material particulado fino PM2,5" />
         {error && <p role="alert">{error}</p>}
         {!data && !error && <p role="status">Consultando la red de monitoreo…</p>}
         {data?.medicion && <p className="reading-source">{label} · {hora(data.medicion.hora)} · Bogotá</p>}

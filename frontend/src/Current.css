@@ -1,0 +1,33 @@
+/* Tarjeta principal: unidad junto al número y escala de nivel de PM2,5. */
+.now-value small { margin-left: .55rem; }
+
+.level-scale { display: grid; gap: .6rem; margin: .5rem 0 1rem; }
+.level-head { display: flex; align-items: center; flex-wrap: wrap; gap: .5rem .8rem; }
+.level-badge { padding: .36rem .65rem; border-radius: .4rem; font: 600 .6rem 'JetBrains Mono', monospace; letter-spacing: .08em; white-space: nowrap; }
+.level-badge.is-baja { background: #0f3d33; color: #6ee7b7; }
+.level-badge.is-intermedia { background: #4a3a0e; color: #fcd34d; }
+.level-badge.is-alta { background: #4d1f1f; color: #fca5a5; }
+.level-badge.is-sin-dato { background: #243249; color: #b4c3d8; }
+
+.level-track { position: relative; display: flex; height: .6rem; margin-top: .35rem; }
+.level-track > span { flex: 1; }
+.level-track > span:first-child { border-radius: 999px 0 0 999px; }
+.level-track > span:last-child { border-radius: 0 999px 999px 0; }
+.level-track .is-baja { background: #34d399; }
+.level-track .is-intermedia { background: #facc15; }
+.level-track .is-alta { background: #f87171; }
+.level-marker { position: absolute; top: 50%; width: 1.15rem; height: 1.15rem; box-sizing: border-box; border: 3px solid #0b1424; border-radius: 50%; background: #fff; transform: translate(-50%, -50%); transition: left .5s ease; }
+
+.level-labels { display: grid; grid-template-columns: repeat(3, 1fr); color: #9db0c8; font-size: .68rem; }
+.level-labels span:nth-child(2) { text-align: center; }
+.level-labels span:last-child { text-align: right; }
+
+@media (prefers-reduced-motion: reduce) { .level-marker { transition: none; } }
+@media (max-width: 40rem) { .level-labels { font-size: .62rem; } }
+
+body[data-theme="light"] .level-badge.is-baja { background: #dcf5e9; color: #0b6b45; }
+body[data-theme="light"] .level-badge.is-intermedia { background: #fdf1cf; color: #8a5a00; }
+body[data-theme="light"] .level-badge.is-alta { background: #fde2e2; color: #a12b2b; }
+body[data-theme="light"] .level-badge.is-sin-dato { background: #e6ecf3; color: #5a6c84; }
+body[data-theme="light"] .level-marker { border-color: #fff; background: #1b2f4d; box-shadow: 0 1px 4px #22365340; }
+body[data-theme="light"] .level-labels { color: #5a6c84; }

@@ -1,5 +1,6 @@
 import { hora, numero } from './format'
 import type { CurrentData } from './Current'
+import { nivelPm25 } from './nivel'
 
 type Advice = { icon: string; iconClass: string; title: string; text: string }
 
@@ -14,9 +15,7 @@ export default function Recommendations({ data }: { data?: CurrentData }) {
   const maximum = forecast.length
     ? forecast.reduce((best, point) => point.pm25 > best.pm25 ? point : best)
     : undefined
-  const band = reading
-    ? reading.pm25 < 20 ? 'baja' : reading.pm25 < 40 ? 'intermedia' : 'alta'
-    : 'sin-dato'
+  const band = nivelPm25(reading?.pm25)
 
   let advice: Advice[]
   if (band === 'baja') {
