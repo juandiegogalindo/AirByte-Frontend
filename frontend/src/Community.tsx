@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
-import { api, guardarDestinoAutenticacion, hora, write } from './api'
-import type { Session } from './api'
+import { api, write } from './api'
+import { guardarDestinoAutenticacion } from './auth'
+import { hora } from './format'
+import type { Session } from './types'
 
 type Post = { id: number; autor_id: number; autor: string; texto: string; categoria?: string; creado_en: string }
 type Page = { resultados: Post[]; paginas: number }

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
-import { api, guardarDestinoAutenticacion, notificarSesionActualizada, write } from './api'
-import type { Session } from './api'
+import { api, write } from './api'
+import { guardarDestinoAutenticacion, notificarSesionActualizada } from './auth'
+import type { Session } from './types'
 
 type Theme = 'dark' | 'light'
 const COPYRIGHT_YEAR = new Date().getFullYear()

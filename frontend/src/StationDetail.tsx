@@ -1,5 +1,5 @@
 import type { CurrentData } from './Current'
-import { hora, numero } from './api'
+import { hora, numero } from './format'
 
 type Station = { slug: string; nombre: string; localidad: string; localidad_nombre?: string; latitud: number; longitud: number }
 const localityLabels: Record<string, string> = {

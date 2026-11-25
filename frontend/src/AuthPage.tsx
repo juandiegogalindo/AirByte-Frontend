@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
 import type { FormEvent } from 'react'
-import { api, consumirDestinoAutenticacion, leerDestinoAutenticacion, limpiarParametroNext, write } from './api'
-import type { Session } from './api'
+import { api, write } from './api'
+import { consumirDestinoAutenticacion, leerDestinoAutenticacion, limpiarParametroNext } from './auth'
+import type { Session } from './types'
 import { AirbyteLogoImages, SiteFooter, SiteHeader } from './SiteChrome'
 import './Auth.css'
 

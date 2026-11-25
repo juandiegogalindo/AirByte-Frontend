@@ -1,78 +1,41 @@
-export type User = { id: number; nombre: string; usuario: string; foto: string | null; google_vinculado: boolean; puede_moderar: boolean; puede_moderar_cuentas: boolean; es_admin: boolean }
-export type Session = { usuario: User | null; csrf: string; google_disponible: boolean }
-const AUTH_DESTINATION_KEY = 'airbyte-auth-destination'
-const AUTH_DESTINATION_TTL = 30 * 60 * 1000
-
-function destinoInterno(value: string | null | undefined): string | null {
-  if (!value) return null
-  try {
-    const url = new URL(value, window.location.origin)
-    const ruta = url.pathname.replace(/\/+$/, '') || '/'
-    if (url.origin !== window.location.origin || !['/administracion', '/moderacion', '/perfil', '/comunidad'].includes(ruta)) return null
-    return `${ruta}${url.search}${url.hash}`
-  } catch {
-    return null
+// Cliente HTTP del backend (/api/v1). Convierte cualquier fallo en un ApiError con mensaje legible.
+export class ApiError extends Error {
+  status: number
+  constructor(message: string, status: number) {
+    super(message)
+    this.name = 'ApiError'
+    this.status = status
   }
 }
 
-export function guardarDestinoAutenticacion(value: string) {
-  const destino = destinoInterno(value)
-  if (!destino) return
-  try {
-    sessionStorage.setItem(AUTH_DESTINATION_KEY, JSON.stringify({ destino, creado: Date.now() }))
-  } catch { /* El inicio de sesión usa la página predeterminada si el almacenamiento está bloqueado. */ }
-}
+const SIN_CONEXION = 'No hay conexión con el servidor. Revisa tu internet e inténtalo de nuevo.'
+const SERVIDOR_NO_RESPONDE = 'El servidor está despertando o no responde. Espera unos segundos e inténtalo de nuevo.'
+const CONSULTA_NO_DISPONIBLE = 'La consulta no está disponible.'
 
-export function leerDestinoAutenticacion(fallback = '/comunidad') {
-  try {
-    const almacenado = sessionStorage.getItem(AUTH_DESTINATION_KEY)
-    if (almacenado) {
-      const dato = JSON.parse(almacenado) as { destino?: string; creado?: number }
-      if (typeof dato.creado === 'number' && Date.now() - dato.creado < AUTH_DESTINATION_TTL) {
-        const destino = destinoInterno(dato.destino)
-        if (destino) return destino
-      }
-      sessionStorage.removeItem(AUTH_DESTINATION_KEY)
-    }
-    const legado = destinoInterno(new URLSearchParams(window.location.search).get('next'))
-    if (legado) {
-      guardarDestinoAutenticacion(legado)
-      return legado
-    }
-  } catch { /* El inicio de sesión sigue disponible sin almacenamiento local. */ }
-  return fallback
-}
-
-export function consumirDestinoAutenticacion(fallback = '/comunidad') {
-  const destino = leerDestinoAutenticacion(fallback)
-  try { sessionStorage.removeItem(AUTH_DESTINATION_KEY) } catch { /* No hay nada que limpiar. */ }
-  return destino
-}
-
-export function limpiarParametroNext() {
-  const url = new URL(window.location.href)
-  if (!url.searchParams.has('next')) return
-  url.searchParams.delete('next')
-  window.history.replaceState(window.history.state, '', `${url.pathname}${url.search}${url.hash}`)
+async function leerJson(response: Response): Promise<unknown> {
+  try { return await response.json() } catch { return null }
 }
 
 export async function api<T>(path: string, options?: RequestInit): Promise<T> {
-  const response = await fetch('/api/v1' + path, options)
+  let response: Response
+  try {
+    response = await fetch('/api/v1' + path, options)
+  } catch (error) {
+    if (error instanceof DOMException && error.name === 'AbortError') throw error
+    throw new ApiError(SIN_CONEXION, 0)
+  }
   if (response.status === 204) return undefined as T
-  const data = await response.json()
-  if (!response.ok) throw new Error(data.mensaje ?? 'La consulta no está disponible.')
-  return data
+  const data = await leerJson(response)
+  const mensaje = (data as { mensaje?: unknown } | null)?.mensaje
+  if (!response.ok) {
+    const porDefecto = response.status >= 500 ? SERVIDOR_NO_RESPONDE : CONSULTA_NO_DISPONIBLE
+    throw new ApiError(typeof mensaje === 'string' ? mensaje : porDefecto, response.status)
+  }
+  if (data === null) throw new ApiError(SERVIDOR_NO_RESPONDE, response.status)
+  return data as T
 }
+
 export function write<T>(path: string, method: string, csrf: string, data?: object) {
   return api<T>(path, { method, headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrf },
     body: data ? JSON.stringify(data) : undefined })
 }
-export function notificarSesionActualizada(session: Session) {
-  window.dispatchEvent(new CustomEvent('airbyte:session-update', { detail: session }))
-}
-export function hora(value: string) {
-  return new Intl.DateTimeFormat('es-CO', { dateStyle: 'medium', timeStyle: 'short',
-    timeZone: 'America/Bogota' }).format(new Date(value))
-}
-export const numero = new Intl.NumberFormat('es-CO', { maximumFractionDigits: 2 })
-

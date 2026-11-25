@@ -1,4 +1,4 @@
-import { hora, numero } from './api'
+import { hora, numero } from './format'
 import type { CurrentData } from './Current'
 
 type Advice = { icon: string; iconClass: string; title: string; text: string }

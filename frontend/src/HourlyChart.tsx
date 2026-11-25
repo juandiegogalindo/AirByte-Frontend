@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react'
 import type { PointerEvent as ReactPointerEvent } from 'react'
-import { hora, numero } from './api'
+import { hora, numero } from './format'
 
 export type ForecastPoint = { hora: string; pm25: number }
 const time = new Intl.DateTimeFormat('es-CO', { hour: '2-digit', minute: '2-digit',

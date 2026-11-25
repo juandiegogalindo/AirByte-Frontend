@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
-import { api, guardarDestinoAutenticacion, write } from './api'
-import type { Session } from './api'
+import { api, write } from './api'
+import { guardarDestinoAutenticacion } from './auth'
+import type { Session } from './types'
 import { SiteFooter, SiteHeader } from './SiteChrome'
 import './ModerationPage.css'
 

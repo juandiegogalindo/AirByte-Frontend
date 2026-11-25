@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
-import { api, hora, numero } from './api'
+import { api } from './api'
+import { hora, numero } from './format'
 import HourlyChart, { type ForecastPoint } from './HourlyChart'
 import Recommendations from './Recommendations'
 

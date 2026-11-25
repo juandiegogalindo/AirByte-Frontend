@@ -1,15 +1,13 @@
 import { useEffect, useRef, useState } from 'react'
-import { api, hora, numero } from './api'
+import { api } from './api'
+import { hora, numero } from './format'
+import type { Result, Station } from './types'
 import Current, { type CurrentData } from './Current'
 import LocalityMap, { MapLegend } from './LocalityMap'
 import StationDetail from './StationDetail'
 import { SiteFooter, SiteHeader } from './SiteChrome'
 import './App.css'
 
-type Station = { slug: string; nombre: string; localidad: string; localidad_nombre?: string; latitud: number; longitud: number; desde: string | null; hasta: string | null }
-type Reading = { hora: string; pm25: number; unidad: string }
-type Result = { estado: string; emision: string; medicion: (Reading & { antiguedad_minutos: number }) | null;
-  pronostico: Reading | null; evaluacion?: { hora_observada: string; pm25_observado: number | null } }
 const etiquetaMes = (mes: string) => new Intl.DateTimeFormat('es-CO', { month: 'long', year: 'numeric', timeZone: 'UTC' })
   .format(new Date(`${mes}-01T12:00:00Z`))
 const localityLabels: Record<string, string> = {
