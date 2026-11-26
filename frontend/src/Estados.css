@@ -1,0 +1,15 @@
+/* Estados de carga y de error compartidos. */
+.skeleton { display: inline-block; border-radius: .4rem; vertical-align: middle; background: linear-gradient(90deg, #1c2a42 25%, #28395a 50%, #1c2a42 75%); background-size: 200% 100%; animation: skeleton-shimmer 1.4s ease-in-out infinite; }
+@keyframes skeleton-shimmer { to { background-position: -200% 0; } }
+@media (prefers-reduced-motion: reduce) { .skeleton { animation: none; } }
+.live-metrics .skeleton, .recommendation .skeleton { display: block; }
+.recommendation .skeleton + .skeleton { margin-top: .45rem; }
+
+.status-pill.is-loading { background: #202a3d; color: #b4c3d8; }
+
+.error-notice { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .6rem 1rem; margin: .4rem 0 .8rem; padding: .7rem .9rem; border: 1px solid #743e46; border-radius: .5rem; background: #42232d; color: #ffc2c8; }
+.error-notice p { margin: 0; font-size: .85rem; }
+
+body[data-theme="light"] .skeleton { background: linear-gradient(90deg, #e6edf5 25%, #f4f8fc 50%, #e6edf5 75%); background-size: 200% 100%; }
+body[data-theme="light"] .status-pill.is-loading { background: #e6ecf3; color: #5a6c84; }
+body[data-theme="light"] .error-notice { border-color: #f0b4b4; background: #fde2e2; color: #8a2323; }

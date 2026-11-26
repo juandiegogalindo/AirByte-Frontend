@@ -6,7 +6,7 @@ import Current, { type CurrentData } from './pages/Current/Current'
 import Historico from './pages/Historico/Historico'
 import LocalityMap, { MapLegend } from './components/LocalityMap'
 import StationDetail from './components/StationDetail'
-import { SiteFooter, SiteHeader } from './components/SiteChrome'
+import { SiteFooter, SiteHeader } from './SiteChrome'
 import './App.css'
 
 const localityLabels: Record<string, string> = {
@@ -82,9 +82,9 @@ export default function App() {
 
         <div className="view-toolbar">
           <span className="view-toolbar-label">Calidad del aire · Bogotá D.C.</span>
-          <div className="mode-switch" role="tablist" aria-label="Vista de calidad del aire">
-            <button role="tab" aria-selected={!historical} aria-pressed={!historical} onClick={() => setHistorical(false)}>En vivo</button>
-            <button role="tab" aria-selected={historical} aria-pressed={historical} onClick={() => setHistorical(true)}>Histórico</button>
+          <div className="mode-switch" role="group" aria-label="Vista de calidad del aire">
+            <button aria-pressed={!historical} onClick={() => setHistorical(false)}>En vivo</button>
+            <button aria-pressed={historical} onClick={() => setHistorical(true)}>Histórico</button>
           </div>
         </div>
 
@@ -94,7 +94,7 @@ export default function App() {
         <section className="pm25-explainer panel" aria-labelledby="pm25-title">
           <h2 id="pm25-title">¿Qué es PM2,5 y por qué importa?</h2>
           <p>PM2,5 son partículas suspendidas en el aire de 2,5 micrómetros o menos, generadas por fuentes como el humo y la combustión. Por su tamaño pueden llegar profundo a los pulmones y pasar al torrente sanguíneo, con efectos respiratorios y cardiovasculares.</p>
-          <p>Niños, personas mayores y quienes tienen enfermedades del corazón o los pulmones pueden ser más sensibles. Revisa la lectura antes de salir y sigue la información oficial de Bogotá cuando suba la contaminación. <a href="https://www.who.int/news/item/25-06-2024-what-are-health-consequences-of-air-pollution-on-populations" target="_blank" rel="noreferrer">Fuente: OMS ↗</a></p>
+          <p>Niños, personas mayores y quienes tienen enfermedades del corazón o los pulmones pueden ser más sensibles. Revisa la lectura antes de salir y sigue la información oficial de Bogotá cuando suba la contaminación. <a href="https://www.who.int/news/item/25-06-2024-what-are-health-consequences-of-air-pollution-on-populations" target="_blank" rel="noreferrer">Fuente: OMS ↗<span className="visually-hidden"> (se abre en una pestaña nueva)</span></a></p>
         </section>
 
         <section className="map-panel panel" aria-labelledby="map-title">
@@ -106,7 +106,7 @@ export default function App() {
           <div className="map-content">
             <div className="map-column">
               <LocalityMap stations={stations} selected={station} select={changeStation} />
-              <p className="map-source">Límites de localidades · <a href="https://mapas.gobiernobogota.gov.co/waserver/rest/services/Mapa_Base/MapServer/4" target="_blank" rel="noreferrer">IDECA</a></p>
+              <p className="map-source">Límites de localidades · <a href="https://mapas.gobiernobogota.gov.co/waserver/rest/services/Mapa_Base/MapServer/4" target="_blank" rel="noreferrer">IDECA<span className="visually-hidden"> (se abre en una pestaña nueva)</span></a></p>
             </div>
             <StationDetail station={selected} data={stationData} onPin={pinStation} pinned={pinnedStation === station} />
           </div>

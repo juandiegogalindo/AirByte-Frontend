@@ -1,0 +1,85 @@
+.auth-page, .terms-page { min-height: 100vh; background-color: #0b1326; background-image: radial-gradient(circle at 75% 18%, rgb(14 165 233 / 10%), transparent 30rem), radial-gradient(#18324a 1px, transparent 1px); background-size: auto, 27px 27px; }
+.auth-status { display: flex; align-items: center; gap: .55rem; width: min(960px, 92vw); margin: 1.35rem auto 0; color: #99acc1; font: 600 .68rem 'JetBrains Mono', monospace; letter-spacing: .08em; }
+.live-dot { width: .55rem; height: .55rem; border-radius: 50%; background: #4edea3; box-shadow: 0 0 12px rgb(78 222 163 / 60%); }
+.auth-main { display: grid; place-items: center; width: min(960px, 92vw); margin: 1.25rem auto 2.5rem; }
+.auth-card { width: min(100%, 590px); padding: clamp(1.35rem, 5vw, 3.2rem); border: 1px solid #28364e; border-radius: .75rem; background: rgb(19 27 46 / 96%); box-shadow: 0 24px 90px rgb(0 0 0 / 30%); }
+.auth-brand { display: flex; justify-content: center; width: min(100%, 15rem); margin: 0 auto; }
+.auth-brand .auth-brand-logo { width: 100%; max-width: 15rem; }
+.auth-card h1 { margin: 1.4rem 0 .4rem; text-align: center; font-size: clamp(1.8rem, 5vw, 2.35rem); letter-spacing: -.04em; }
+.auth-intro { max-width: 27rem; margin: 0 auto 1.5rem; color: #aebbd0; text-align: center; }
+.google-button { display: flex; align-items: center; justify-content: center; gap: .7rem; width: 100%; padding: .9rem; border-color: #303d55; background: #222a3d; font-weight: 600; }
+.google-button:disabled { opacity: .78; cursor: not-allowed; }
+.google-unavailable { margin: .45rem 0 0; color: #91a5bf; font-size: .72rem; line-height: 1.4; text-align: center; }
+.google-consent-notice { margin: .45rem 0 0; color: #b4c1d4; font-size: .76rem; line-height: 1.5; text-align: center; }
+.google-mark { width: 1.2rem; height: 1.2rem; }
+.auth-divider { display: flex; align-items: center; gap: .75rem; margin: 1.25rem 0; color: #97a8bd; font: 600 .65rem 'JetBrains Mono', monospace; letter-spacing: .04em; text-align: center; }
+.auth-divider span { height: 1px; flex: 1; background: #303b4e; }
+.auth-form > label { margin: .85rem 0; color: #d0dbec; font: 600 .68rem 'JetBrains Mono', monospace; letter-spacing: .055em; text-transform: uppercase; }
+.auth-form > label > input, .password-wrap input { width: 100%; min-height: 3.15rem; margin-top: .12rem; font: 400 .92rem 'Plus Jakarta Sans', sans-serif; letter-spacing: normal; text-transform: none; }
+.password-wrap { position: relative; display: block; }
+.password-wrap input { padding-right: 5.2rem; }
+.reveal-password { position: absolute; top: .55rem; right: .45rem; padding: .4rem .5rem; border-color: transparent; background: transparent; color: #89ceff; font-size: .74rem; }
+.reveal-password:hover:not(:disabled) { border-color: transparent; background: #1d2a40; }
+.password-help { margin: -.35rem 0 .7rem; color: #91a5bf; font-size: .76rem; }
+.legal-consent { display: grid; grid-template-columns: 1.3rem 1fr; gap: .65rem; margin: 1.1rem 0; padding: .85rem; border: 1px solid #27364d; border-radius: .45rem; background: #10192b; }
+.consent-icon { color: #4cd7f6; font-size: 1.25rem; }
+.legal-consent strong { color: #4cd7f6; font: 600 .66rem 'JetBrains Mono', monospace; letter-spacing: .06em; text-transform: uppercase; }
+.legal-consent p { margin: .3rem 0 .7rem; color: #b4c1d4; font-size: .78rem; }
+.consent-check { display: flex; align-items: flex-start; gap: .5rem; color: #dce6f7; font-size: .78rem; font-weight: 500; }
+.consent-check input { width: 1rem; height: 1rem; flex: 0 0 auto; margin: .12rem 0 0; accent-color: #0ea5e9; }
+.auth-submit { display: flex; align-items: center; justify-content: center; gap: .7rem; width: 100%; min-height: 3.25rem; border-color: #0ea5e9; background: #0ea5e9; color: #062033; font-weight: 700; }
+.auth-submit:hover:not(:disabled) { border-color: #4dc5f5; background: #4dc5f5; }
+.auth-switch { margin: 1.45rem 0 0; color: #bdc9dc; text-align: center; font-size: .85rem; }
+.auth-switch a { font-weight: 700; }
+.terms-main { width: min(1040px, 92vw); margin: 2.5rem auto 4rem; }
+.terms-heading { padding: clamp(1.25rem, 4vw, 2.5rem); border-left: 3px solid #4cd7f6; border-radius: .4rem; background: #131b2e; }
+.eyebrow { color: #89ceff; font: 600 .65rem 'JetBrains Mono', monospace; letter-spacing: .08em; }
+.terms-heading h1 { margin: .6rem 0; font-size: clamp(1.8rem, 5vw, 2.7rem); }
+.terms-heading p, .terms-section p { color: #b6c3d5; }
+.terms-layout { display: grid; grid-template-columns: minmax(190px, .7fr) minmax(0, 2fr); gap: 1rem; margin-top: 1rem; align-items: start; }
+.terms-index, .terms-section { border: 1px solid #29364c; border-radius: .6rem; background: #131b2e; }
+.terms-index { position: sticky; top: 5.5rem; display: grid; gap: .2rem; padding: 1rem; }
+.terms-index strong { margin-bottom: .5rem; }
+.terms-index a { padding: .45rem 0; color: #b7c5d8; font-size: .79rem; text-decoration: none; }
+.terms-index a:hover { color: #89ceff; }
+.terms-sections { display: grid; gap: .8rem; }
+.terms-section { scroll-margin-top: 5.5rem; padding: clamp(1rem, 3vw, 1.4rem); }
+.terms-section h2 { margin: .45rem 0; font-size: 1.12rem; }
+.terms-section p { margin-bottom: 0; font-size: .9rem; }
+.terms-updated { color: #91a5bf; font: .72rem 'JetBrains Mono', monospace; }
+.auth-error { margin: .75rem 0; font-size: .86rem; }
+.google-signup-form .profile-photo-row { margin: .2rem 0 .5rem; }
+.google-signup-form .legal-consent { margin: .6rem 0; }
+.google-signup-error { display: grid; justify-items: center; gap: .7rem; margin-top: 1rem; color: #ffb4ab; text-align: center; }
+.google-signup-error p { margin: 0; }
+@media (max-width: 680px) { .auth-status { margin-top: .9rem; } .terms-layout { grid-template-columns: 1fr; } .terms-index { position: static; } .terms-index a { padding: .35rem 0; } }
+
+body[data-theme="light"] .auth-page, body[data-theme="light"] .terms-page { background-color: #f1f5fa; background-image: radial-gradient(circle at 75% 18%, #cfeaf5aa, transparent 30rem), radial-gradient(#d9e2ec 1px, transparent 1px); }
+body[data-theme="light"] .auth-status { color: #5f7189; }
+body[data-theme="light"] .auth-card { border-color: #d9e2ed; background: rgb(255 255 255 / 96%); box-shadow: 0 24px 70px #20375316; }
+body[data-theme="light"] .auth-brand { color: #20334e; }
+body[data-theme="light"] .auth-brand small { color: #657991; }
+body[data-theme="light"] .auth-intro, body[data-theme="light"] .auth-switch { color: #5d7088; }
+body[data-theme="light"] .google-button { border-color: #d2dce8; background: #f7f9fc; color: #253750; }
+body[data-theme="light"] .google-button:hover:not(:disabled) { background: #ecf3f8; }
+body[data-theme="light"] .google-button:disabled { border-color: #d8e1eb; background: #f1f4f8; color: #697c93; }
+body[data-theme="light"] .google-unavailable { color: #6d7f95; }
+body[data-theme="light"] .google-consent-notice { color: #53677f; }
+body[data-theme="light"] .auth-divider { color: #566a82; }
+body[data-theme="light"] .auth-divider span { background: #dce4ed; }
+body[data-theme="light"] .auth-form > label { color: #42556f; }
+body[data-theme="light"] .password-help { color: #566a82; }
+body[data-theme="light"] .reveal-password { color: #066a9a; }
+body[data-theme="light"] .reveal-password:hover:not(:disabled) { background: #e9f3fa; }
+body[data-theme="light"] .legal-consent { border-color: #dce4ed; background: #f5f8fb; }
+body[data-theme="light"] .legal-consent strong { color: #087e9b; }
+body[data-theme="light"] .legal-consent p, body[data-theme="light"] .consent-check { color: #53677f; }
+body[data-theme="light"] .auth-submit { border-color: #0876a6; background: #0876a6; color: #fff; }
+body[data-theme="light"] .auth-submit:hover:not(:disabled) { border-color: #05638d; background: #05638d; }
+body[data-theme="light"] .terms-heading, body[data-theme="light"] .terms-index, body[data-theme="light"] .terms-section { border-color: #dce4ed; background: #fff; }
+body[data-theme="light"] .terms-heading { border-left-color: #168bc2; }
+body[data-theme="light"] .terms-heading p, body[data-theme="light"] .terms-section p { color: #566b84; }
+body[data-theme="light"] .terms-index a { color: #536982; }
+body[data-theme="light"] .terms-index a:hover { color: #066a9a; }
+body[data-theme="light"] .terms-updated { color: #566a82; }
+body[data-theme="light"] .google-signup-error { color: #a22e2e; }
