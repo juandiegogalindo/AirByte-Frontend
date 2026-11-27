@@ -1,83 +1,244 @@
-# Air-Byte
+<div align="center">
 
-Pronóstico de la concentración horaria de PM2,5 a 24 horas por estación de Bogotá. La arquitectura prevista combina React con TypeScript, un backend Django y PostgreSQL.
+#  AirByte · Frontend
 
-## Reproducir el entrenamiento
+**Interfaz web para consultar y anticipar la calidad del aire en Bogotá**
 
-1. Desde la raíz, ejecuta `python scripts/consolidate_rmcab.py` sobre los libros históricos en `datos/RMCAB/`.
-2. Ejecuta `python scripts/preparar_dataset_modelo.py`. El CSV utilizado en el entrenamiento fue `datos/RMCAB/dataset_modelo_pm25_24h.csv`, con 239.097 filas de datos, 23.711.091 bytes y SHA-256 `df7dfecd4446fe50e779353d7c6756d2011a914ee41268bc69a6d65744a08948`.
-3. Abre [el cuaderno original](notebooks/air_byte.ipynb) en Colab, ejecuta ambas celdas en orden y selecciona el CSV cuando se solicite. La primera entrena el modelo base. La segunda incorpora las observaciones de PM2,5 de hace 1, 3, 6 y 24 horas y guarda [el modelo elegido](modelo/air_byte_pm25_24h_historial.joblib).
+React · TypeScript · Vite
 
-El objetivo es la observación en la misma estación exactamente 24 horas después. El entrenamiento utiliza objetivos anteriores a 2024. El cuaderno compara las variantes en 2024 y evalúa 2025 sobre horas con PM2,5 actual observado. El modelo elegido obtuvo un MAE de 7,12 µg/m³ en 28.527 casos de 2025, frente a 8,19 con persistencia. En las 1.093 horas de pico el error absoluto medio fue 22,44 µg/m³.
+![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-8-646CFF?logo=vite&logoColor=white)
+![Vercel](https://img.shields.io/badge/Deploy-Vercel-000000?logo=vercel&logoColor=white)
 
-## Verificar la integración con Django
+[Aplicación en vivo](https://airbyte-eight.vercel.app) ·
+[Repositorio del backend](https://github.com/juandiegogalindo/AirByte-Backend) ·
+[API](https://airbyte-backend.onrender.com/api/v1/estaciones)
 
-El modelo guarda los nombres y el orden de las columnas en `feature_names_in_`. Los campos actuales marcados como imputados se presentan al modelo como faltantes. Los retardos usan observaciones de la misma estación a la hora exacta. El caso de referencia en `notebooks/prediccion_referencia.json` contiene las entradas en orden y la salida del modelo guardado. El PM2,5 observado al día siguiente se incluye únicamente para evaluación.
+</div>
 
-Las dependencias para reproducir la inferencia local están en [requirements.txt](notebooks/requirements.txt). El archivo del modelo registra scikit-learn 1.6.1. El cuaderno exportado conserva sus resultados, pero no registró el inventario completo de versiones de Colab.
+---
 
-## Ejecutar la demo
+## Tabla de contenidos
 
-Instala Python 3.12.14, PostgreSQL 18 y Node compatible con Vite. En PostgreSQL, crea un rol con contraseña y una base propia. Para la suite de integración, el rol de desarrollo necesita permiso para crear la base temporal.
+1. [Descripción](#descripción)
+2. [Características](#características)
+3. [Arquitectura](#arquitectura)
+4. [Tecnologías](#tecnologías)
+5. [Estructura del proyecto](#estructura-del-proyecto)
+6. [Instalación local](#instalación-local)
+7. [Scripts disponibles](#scripts-disponibles)
+8. [Conexión con el backend](#conexión-con-el-backend)
+9. [Despliegue en Vercel](#despliegue-en-vercel)
+10. [Convenciones del código](#convenciones-del-código)
+11. [Solución de problemas](#solución-de-problemas)
+12. [Equipo](#equipo)
 
-```powershell
-createuser -P --createdb airbyte
-createdb -O airbyte airbyte
-Copy-Item .env.example .env
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-python -m pip install -r backend/requirements.lock
-python -m pip check
-python backend/manage.py verificar_modelo
-python backend/manage.py migrate
-python backend/manage.py check --database default
+---
+
+## Descripción
+
+AirByte es una plataforma que permite saber **qué tan contaminado está el aire en Bogotá** y cómo evolucionará durante las próximas 24 horas, a partir de las mediciones de PM2.5 de la Red de Monitoreo de Calidad del Aire de Bogotá (RMCAB) y de un modelo de aprendizaje automático.
+
+Este repositorio contiene el **frontend**: una aplicación de una sola página (SPA) que consume la API del [backend](https://github.com/juandiegogalindo/AirByte-Backend).
+
+## Características
+
+-  **Calidad del aire actual** por estación de monitoreo, con una escala de niveles de fácil lectura.
+-  **Pronóstico de las próximas 24 horas** con gráficos horarios y mini-gráficos de tendencia.
+-  **Mapa por localidades** para ubicar las estaciones.
+-  **Histórico** de mediciones por estación.
+-  **Recomendaciones personalizadas** según el nivel de contaminación.
+-  **Comunidad**: comentarios y reportes de otros usuarios.
+-  **Cuentas de usuario** con inicio de sesión mediante Google y página de perfil.
+-  **Panel de administración y moderación** para gestionar usuarios y contenido.
+-  **Modo claro y oscuro**.
+-  Páginas de **términos y condiciones** y de **error** personalizadas.
+
+<!-- Sugerencia: agrega capturas de pantalla en docs/img/ y enlázalas aquí, por ejemplo:
+![Pantalla principal](docs/img/inicio.png) -->
+
+## Arquitectura
+
+```mermaid
+flowchart LR
+    U["Usuario<br/>(navegador)"] --> V["Frontend<br/>React + Vite<br/>Vercel"]
+    V -- "/api · /admin · /static · /media<br/>(rewrites)" --> R["Backend<br/>Django<br/>Render"]
+    R --> DB[("PostgreSQL<br/>Neon")]
+    R -- "OAuth 2.0" --> G["Google"]
 ```
 
-Completa la contraseña PostgreSQL y una clave aleatoria larga para Django en el archivo `.env` antes de ejecutar los comandos de Django. La configuración se lee de ese archivo y las variables de entorno tienen prioridad.
+El frontend se sirve como archivos estáticos desde Vercel. Todas las llamadas a `/api`, `/admin`, `/static` y `/media` se **reenvían al backend** mediante *rewrites*, de modo que el navegador solo habla con un origen. Esto evita configurar CORS y permite que las cookies de sesión funcionen sin ajustes.
 
-Coloca los 57 libros originales bajo `datos/RMCAB/<estación>/<año>/` o recupera el consolidado congelado del equipo. [La RMCAB publica los datos históricos](https://www.ambientebogota.gov.co/es/red-de-monitoreo-de-calidad-del-aire-de-bogota-rmcab). La huella de `dataset_RMCAB_limpio.csv` para la demo es `47b3962edd58428384500e7a3010e85f7e86b78a32cd4e4d8f1f152cca69dad8`. El validador rechaza una copia con contenido distinto al importar como `rmcab-v1`.
+## Tecnologías
 
-```powershell
-python backend/manage.py importar_rmcab --archivo datos/RMCAB/dataset_RMCAB_limpio.csv --version-datos rmcab-v1
-python backend/manage.py test aire cuentas comunidad
-python backend/manage.py runserver
+| Área | Tecnología |
+| --- | --- |
+| Interfaz | React + TypeScript |
+| Empaquetado y servidor de desarrollo | Vite |
+| Calidad de código | Oxlint, TypeScript en modo estricto |
+| Hosting | Vercel |
+| Backend (API) | Django en Render, PostgreSQL en Neon |
+
+## Estructura del proyecto
+
+```text
+AirByte-Frontend/
+├── docs/                          # Documentación del proyecto
+├── frontend/
+│   ├── public/                    # Recursos estáticos
+│   ├── src/
+│   │   ├── assets/                # Imágenes y recursos
+│   │   ├── components/            # Piezas reutilizables
+│   │   │   ├── charts/            #   HourlyChart, Sparkline
+│   │   │   ├── LevelScale.tsx     #   Escala de niveles de calidad del aire
+│   │   │   ├── LocalityMap.tsx    #   Mapa por localidades
+│   │   │   ├── Recommendations.tsx
+│   │   │   ├── SiteChrome.tsx     #   Encabezado y pie de página
+│   │   │   └── StationDetail.tsx
+│   │   ├── pages/                 # Una carpeta por pantalla (con su CSS)
+│   │   │   ├── Admin/             #   Usuarios y moderación
+│   │   │   ├── Auth/              #   Inicio de sesión y registro con Google
+│   │   │   ├── Community/
+│   │   │   ├── Current/           #   Calidad del aire actual
+│   │   │   ├── Error/
+│   │   │   ├── Estados/
+│   │   │   ├── Historico/
+│   │   │   ├── Profile/
+│   │   │   └── Terms/
+│   │   ├── services/              # Comunicación con el backend
+│   │   │   ├── api.ts
+│   │   │   └── auth.ts
+│   │   ├── utils/                 # format.ts, nivel.ts
+│   │   ├── types/                 # Tipos de TypeScript
+│   │   ├── data/                  # localidades.json
+│   │   ├── App.tsx
+│   │   ├── main.tsx
+│   │   └── index.css
+│   ├── index.html
+│   ├── package.json
+│   ├── tsconfig*.json
+│   ├── vite.config.ts
+│   └── vercel.json                # Rewrites hacia el backend
+└── README.md
 ```
 
-Agrega `--estacion tunal` para cargar solo esa estación. Repetir la carga conserva los mismos datos y la procedencia. El comando informa horas únicas, conflictos, duplicados y faltantes. La opción `--version-datos` evita un conflicto con la opción `--version` que Django incorpora en todos sus comandos.
+**Criterio de organización:** cada pantalla vive en `pages/` junto a su CSS; lo que se reutiliza en varias pantallas va en `components/`; todo lo que habla con el backend está aislado en `services/`.
 
-En otra terminal, desde `frontend`, ejecuta `npm ci` y `npm run dev`. Abre [Air-Byte](http://localhost:5173). React envía las consultas del mismo origen a Django mediante el proxy de Vite. Para publicar, configura un servidor HTTPS que sirva `frontend/dist`, enrute `/api` y `/admin` a Django, y sirva la carpeta generada por `collectstatic` en `/static`. Configura los hosts permitidos y desactiva `DJANGO_DEBUG`.
+## Instalación local
 
-### Versiones del histórico
+### Requisitos
 
-La edición congelada `rmcab-v1` reproduce la referencia de Tunal. El consolidador usado en el cuaderno descartaba las filas marcadas `24:00`. Para recuperar esas observaciones, ejecuta `python scripts/consolidate_rmcab.py --recuperar-medianoche`. Se genera `dataset_RMCAB_limpio_v2.csv` y se conserva el original. Impórtalo con `--version-datos rmcab-v2` y configura `AIRBYTE_HISTORICO=rmcab-v2` para consultarlo. En la edición corregida, el 40 µg/m³ observado a medianoche cambia la referencia de Tunal de 21,4588 a 20,9489 µg/m³.
+- **Node.js 20.19 o superior** (se recomienda la versión LTS más reciente)
+- npm
+- El [backend](https://github.com/juandiegogalindo/AirByte-Backend) en ejecución en `http://127.0.0.1:8000`
 
-### Google y moderación
+### Pasos
 
-Crea un cliente OAuth de tipo **Aplicación web** en Google Cloud, configura la pantalla de consentimiento y registra la URI exacta `http://localhost:5173/api/v1/auth/google/callback`. Añade la URI HTTPS correspondiente en el despliegue. Si el cliente está en estado de prueba, añade los usuarios de la demo en Google Cloud. Completa `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` y `GOOGLE_REDIRECT_URI` en `.env` y reinicia Django. El secreto se queda en el servidor.
+```bash
+# 1. Clonar el repositorio
+git clone https://github.com/juandiegogalindo/AirByte-Frontend.git
+cd AirByte-Frontend/frontend
 
-La sesión queda en `django_session` y la identidad de Google en `cuentas_identidad_google`, vinculada a `auth_user`. El backend intercambia el código con Google, valida el token de identidad y abre una sesión local. React usa el token CSRF en escrituras. Los tokens de Google solo viven durante el intercambio. Para vincular una cuenta existente, entra primero con sus credenciales y pulsa **Vincular Google**.
+# 2. Instalar dependencias
+npm install
 
-Ejecuta `python backend/manage.py createsuperuser` para administrar la demo. Para una cuenta de moderación, marca **Es staff** y asígnala al grupo **Moderadores** en Django Admin. Selecciona publicaciones y aplica **Ocultar publicaciones seleccionadas**. La comunidad es pública para lectura. La creación y el borrado de contenido propio requieren sesión.
-
-### Guion
-
-- Tunal, 1 de enero de 2025 a las 01:00. Medición 42, pronóstico 21,4587806153477, observado al día siguiente 12 µg/m³.
-- Tunal, 4 de enero a las 05:00. Caso típico de 13, 13,63 y 14 µg/m³.
-- Tunal, 18 de febrero a las 11:00. Episodio alto de 50, 28,30 y 92 µg/m³.
-- Publica un reporte y un comentario en Tunjuelito, léelos como visitante y oculta el reporte desde Admin.
-
-Todas las horas corresponden a Bogotá. El promedio horario y el horizonte del pronóstico se indican por separado. El MAE del modelo de 7,12 µg/m³ frente a 8,19 de persistencia corresponde a su evaluación de 2025.
-
-## Vista Ahora y pronóstico por hora
-
-La portada consulta la última medición horaria de PM2,5 de la RMCAB para la estación elegida. Presenta fecha, hora y antigüedad. El pronóstico contiene 24 valores, desde una hasta 24 horas después de esa medición, en la zona America/Bogota. Cuando la última lectura tiene tres horas o más, la interfaz indica el retraso y suspende el pronóstico. La pestaña Histórico conserva la demo reproducible de 2025.
-
-La vista consulta la RMCAB como máximo una vez cada cinco minutos por proceso y almacena las lecturas en PostgreSQL bajo `rmcab-actual`. Para acumular retardos mientras la aplicación está cerrada, programa `python backend/manage.py actualizar_rmcab` cada hora en el servidor. Si un retardo exacto falta, el modelo lo recibe como faltante. Una caída del proveedor conserva la fecha de la última medición guardada.
-
-El artefacto `modelo/air_byte_pm25_horario.joblib` contiene un modelo por horizonte, entrenado con objetivos anteriores a 2024 y evaluado por separado en 2025. Para regenerarlo:
-
-```powershell
-python backend/manage.py entrenar_pronostico_horario --archivo datos/RMCAB/dataset_RMCAB_limpio.csv
+# 3. Iniciar el servidor de desarrollo
+npm run dev
 ```
 
-El comando muestra el MAE y la persistencia por horizonte. El artefacto original para la referencia de Tunal sigue disponible en Histórico.
+La aplicación queda disponible en <http://localhost:5173>.
+
+> El puerto 5173 es fijo (`strictPort`). Si está ocupado, Vite no cambiará de puerto: libéralo primero. El inicio de sesión con Google está registrado para ese puerto.
+
+No se necesitan variables de entorno: la aplicación llama a rutas relativas (`/api/...`) y Vite las redirige al backend local.
+
+## Scripts disponibles
+
+Ejecútalos desde la carpeta `frontend/`:
+
+| Comando | Descripción |
+| --- | --- |
+| `npm run dev` | Servidor de desarrollo con recarga en caliente en el puerto 5173. |
+| `npm run build` | Revisa los tipos con `tsc -b` y genera la versión de producción en `dist/`. |
+| `npm run preview` | Sirve localmente la versión compilada. |
+| `npm run lint` | Ejecuta el linter (Oxlint). |
+
+> Antes de subir cambios, corre `npm run build`. A diferencia de `npm run dev`, el *build* revisa **todos** los archivos y detecta imports rotos y errores de tipos de una sola vez.
+
+## Conexión con el backend
+
+### En desarrollo
+
+`vite.config.ts` define un proxy que envía al backend local las rutas de la API:
+
+| Ruta | Destino |
+| --- | --- |
+| `/api` | `http://127.0.0.1:8000` |
+| `/admin/` | `http://127.0.0.1:8000` |
+| `/static` | `http://127.0.0.1:8000` |
+
+### En producción
+
+`vercel.json` reenvía esas mismas rutas al backend desplegado en Render:
+
+```json
+{
+  "rewrites": [
+    { "source": "/api/:path*",    "destination": "https://airbyte-backend.onrender.com/api/:path*" },
+    { "source": "/admin/:path*",  "destination": "https://airbyte-backend.onrender.com/admin/:path*" },
+    { "source": "/static/:path*", "destination": "https://airbyte-backend.onrender.com/static/:path*" },
+    { "source": "/media/:path*",  "destination": "https://airbyte-backend.onrender.com/media/:path*" },
+    { "source": "/:path*",        "destination": "/index.html" }
+  ]
+}
+```
+
+La última regla devuelve `index.html` para cualquier otra ruta, de modo que la navegación de la SPA funcione al recargar la página o abrir un enlace directo.
+
+> Si cambias la URL del backend, **actualiza las cuatro rutas** de `vercel.json`.
+
+## Despliegue en Vercel
+
+1. En [Vercel](https://vercel.com), elige **Add New → Project** e importa este repositorio.
+2. En **Root Directory** selecciona `frontend`.
+3. Vercel detecta Vite automáticamente (comando de build `npm run build`, salida `dist`). No hace falta ninguna variable de entorno.
+4. Pulsa **Deploy**. Cada `push` a la rama `main` genera un nuevo despliegue de producción.
+
+### Después del primer despliegue
+
+Con el dominio que te asigne Vercel (en este proyecto, `airbyte-eight.vercel.app`) actualiza en el **backend**:
+
+- `DJANGO_ALLOWED_HOSTS` y `DJANGO_CSRF_TRUSTED_ORIGINS`
+- `GOOGLE_REDIRECT_URI` y `FRONTEND_URL`
+
+Y registra en Google Cloud, para el cliente OAuth, el origen `https://<tu-dominio>.vercel.app` y el URI de retorno `https://<tu-dominio>.vercel.app/api/v1/auth/google/callback`. Los detalles están en el [README del backend](https://github.com/juandiegogalindo/AirByte-Backend#despliegue).
+
+## Convenciones del código
+
+- **TypeScript** en todo el código de la aplicación; los tipos compartidos viven en `src/types/`.
+- Cada pantalla en `pages/<Nombre>/` junto con su hoja de estilos.
+- Los componentes reutilizables en `components/`; los gráficos, en `components/charts/`.
+- Las llamadas HTTP **solo** pasan por `services/api.ts` y `services/auth.ts`.
+- Las funciones auxiliares sin interfaz (formato de fechas y números, cálculo de niveles) en `utils/`.
+- Los imports de CSS deben apuntar a la ubicación real del archivo; si mueves un archivo, ejecuta `npm run build` para detectar rutas rotas.
+
+## Solución de problemas
+
+| Síntoma | Causa probable y solución |
+| --- | --- |
+| `Failed to resolve import "...css"` | La ruta del import ya no coincide con la ubicación del archivo, o tiene espacios dentro de las comillas. Corrígela y vuelve a compilar. |
+| La app carga pero no muestra datos | El backend no está en ejecución. Levántalo en el puerto 8000 o comprueba que el servicio de Render esté activo. |
+| La primera carga en producción tarda cerca de un minuto | El plan gratuito de Render suspende el servicio por inactividad; es el arranque en frío. |
+| `Error 400: redirect_uri_mismatch` al iniciar sesión | El URI de retorno no está registrado, o no coincide exactamente, en Google Cloud. |
+| El inicio de sesión funciona en local pero no en producción | Revisa `GOOGLE_REDIRECT_URI`, `FRONTEND_URL` y `DJANGO_CSRF_TRUSTED_ORIGINS` en el backend. |
+| Al recargar una página sale un error 404 | Falta la regla final de `vercel.json` que devuelve `index.html`. |
+| `Port 5173 is already in use` | Cierra el proceso que usa el puerto: Vite está configurado con `strictPort`. |
+
+## Equipo
+Proyecto desarrollado por los participantes en la Universidad Piloto de Colombia (2026-2).
+
+- **Juan Diego Galindo Montenegro** — [@juandiegogalindo](https://github.com/juandiegogalindo)
+- **Cristian Cortes Bejarano** — [@CristianCortes1](https://github.com/CristianCortes1).
+
+Datos de calidad del aire: Red de Monitoreo de Calidad del Aire de Bogotá (RMCAB).
